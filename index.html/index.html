@@ -3,224 +3,374 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SR DOCS Format Converter</title>
+  <title>Amadeus SR DOCS Format Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #4361ee;
-      --secondary: #3f37c9;
-      --dark: #212529;
-      --light: #f8f9fa;
-      --success: #4cc9f0;
+      /* AMADEUS PREMIUM THEME: Deep Blue & Metallic Gold */
+      --bg-color: #070e1c;             /* Very Dark Blue Base */
+      --card-bg: rgba(15, 23, 42, 0.7);/* Translucent Navy */
+      --card-border: rgba(212, 175, 55, 0.15); /* Subtle Gold Border */
+      
+      --primary: #1e3a8a;              /* Deep Royal Blue */
+      --primary-hover: #1e40af;        /* Lighter Blue for Hover */
+      --secondary: #d4af37;            /* Metallic Gold */
+      --secondary-hover: #fcd34d;      /* Bright Gold */
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --input-bg: rgba(8, 13, 24, 0.6);
+      --success: #10b981;
+      --danger: #ef4444;
     }
     
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 2rem;
-      background: #f5f7fa;
-      color: var(--dark);
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      /* Blue and Gold radial gradients for a luxury tech feel */
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.25) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(212, 175, 55, 0.1) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem;
     }
     
-    h1 {
-      color: var(--dark);
+    .header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 3rem;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    h1 {
+      font-size: 2.5rem;
       font-weight: 700;
-      font-size: 2rem;
+      letter-spacing: -0.025em;
+      /* Gold gradient for the main title */
+      background: linear-gradient(135deg, #ffffff 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    .app-wrapper {
+      width: 100%;
+      max-width: 1300px; /* Wide layout */
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      animation: fadeIn 1s ease-out;
     }
     
     .container {
       display: grid;
-      grid-template-columns: 1fr 1.5fr;
+      grid-template-columns: 1fr 1.5fr; /* 50% wider on the right */
       gap: 1.5rem;
-      margin-bottom: 1.5rem;
     }
     
-    .section {
-      background: white;
-      border-radius: 12px;
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
       padding: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.1);
     }
     
-    .section-header {
+    .card-header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 1rem;
     }
+
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
     
-    .section-icon {
-      width: 32px;
-      height: 32px;
-      background: var(--primary);
-      border-radius: 8px;
+    .icon-box {
+      width: 36px;
+      height: 36px;
+      background: rgba(30, 58, 138, 0.3);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 0.75rem;
-      color: white;
-      font-weight: bold;
-      font-size: 0.9rem;
+      color: var(--secondary); /* Gold icons */
     }
     
     h2 {
-      color: var(--dark);
-      margin: 0;
       font-size: 1.1rem;
       font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-icon {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-icon:hover {
+      background: rgba(212, 175, 55, 0.1);
+      border-color: rgba(212, 175, 55, 0.3);
+      color: var(--secondary-hover);
     }
     
-    #inputData {
+    textarea {
       width: 100%;
-      height: 180px;
-      padding: 0.75rem;
-      font-family: 'Inter', sans-serif;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
+      height: 280px;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
       resize: none;
-      font-size: 0.9rem;
-      line-height: 1.5;
-      background: #f8f9fa;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      background: var(--input-bg);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    textarea:focus {
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+    }
+
+    textarea::-webkit-scrollbar {
+      width: 8px;
+    }
+    textarea::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    textarea::-webkit-scrollbar-thumb {
+      background: rgba(212, 175, 55, 0.3);
+      border-radius: 4px;
+    }
+
+    #inputData {
+      font-family: 'Inter', sans-serif;
     }
     
     #outputData {
-      width: 100%;
-      height: 180px;
-      padding: 0.75rem;
       font-family: 'Fira Code', monospace;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      background: #f8f9fa;
-      white-space: pre;
-      overflow: auto;
+      color: var(--secondary-hover);
     }
     
-    .button-group {
+    .action-bar {
       display: flex;
       gap: 1rem;
       justify-content: center;
-      margin-top: 1.5rem;
+      margin-top: 1rem;
     }
     
-    button {
-      padding: 0.75rem 1.5rem;
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
+    .btn-main {
+      padding: 0.85rem 2.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: var(--text-main);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 10px;
       cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 4px 15px rgba(30, 58, 138, 0.4);
+    }
+    
+    .btn-main svg {
+      color: var(--secondary);
+    }
+    
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(30, 58, 138, 0.6), 0 0 15px rgba(212, 175, 55, 0.2);
+      border-color: var(--secondary);
+    }
+    
+    .btn-main:active {
+      transform: translateY(1px);
+    }
+
+    .btn-secondary {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(30, 58, 138, 0.2);
+      border-color: var(--secondary);
+    }
+    
+    .btn-main.success {
+      background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+      border-color: var(--success);
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn-main.success svg {
+      color: #fff;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--secondary);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 30px;
       font-weight: 500;
-      transition: all 0.2s ease;
-      font-size: 0.9rem;
-      min-width: 150px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      transition: bottom 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #toast.show {
+      bottom: 30px;
     }
     
-    button:hover {
-      background-color: var(--secondary);
-      transform: translateY(-1px);
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     
-    button:active {
-      transform: translateY(0);
-    }
-    
-    button.success {
-      background-color: var(--success);
-    }
-    
-    @media (max-width: 768px) {
+    @media (max-width: 850px) {
       .container {
         grid-template-columns: 1fr;
       }
-      
-      body {
-        padding: 1.5rem;
+      .action-bar {
+        flex-direction: column;
       }
-      
-      h1 {
-        font-size: 1.8rem;
+      .btn-main {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>SR DOCS Format Converter</h1>
+
+  <div class="header">
+    <h1>Amadeus SR DOCS Converter</h1>
+    <div class="subtitle">Amadeus Aviation Passenger Data Formatting Tool</div>
+  </div>
   
-  <div class="container">
-    <div class="section">
-      <div class="section-header">
-        <div class="section-icon">1</div>
-        <h2>Input Data</h2>
+  <div class="app-wrapper">
+    <div class="container">
+      
+      <!-- Input Section -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <div class="icon-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <h2>Raw Passenger Data</h2>
+          </div>
+          <div class="toolbar">
+            <button class="btn-icon" onclick="loadSample()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+              Sample
+            </button>
+            <button class="btn-icon" onclick="clearInput()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        </div>
+        <textarea id="inputData" placeholder="Paste passenger data here...&#10;&#10;Format expected:&#10;ADT - Mr John Doe&#10;Passport: A1234567&#10;Nationality: USA&#10;Date of birth: 15/08/1985&#10;Expiry Date: 20/10/2030"></textarea>
       </div>
-      <textarea id="inputData" placeholder="Paste passenger data here..."></textarea>
+      
+      <!-- Output Section -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <div class="icon-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            </div>
+            <h2>Amadeus SR DOCS Format</h2>
+          </div>
+        </div>
+        <textarea id="outputData" readonly placeholder="Parsed format will appear here..."></textarea>
+      </div>
+      
     </div>
     
-    <div class="section">
-      <div class="section-header">
-        <div class="section-icon">2</div>
-        <h2>SR DOCS Format</h2>
-      </div>
-      <textarea id="outputData" readonly></textarea>
+    <div class="action-bar">
+      <button class="btn-main" onclick="convertFormat()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+        CONVERT DATA
+      </button>
+      <button id="copyButton" class="btn-main btn-secondary" onclick="copyToClipboard()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        COPY TO CLIPBOARD
+      </button>
     </div>
   </div>
-  
-  <div class="button-group">
-    <button onclick="convertFormat()">CONVERT</button>
-    <button id="copyButton" onclick="copyToClipboard()">COPY TO CLIPBOARD</button>
-  </div>
+
+  <div id="toast"></div>
 
   <script>
-    function convertFormat() {
-      const raw = document.getElementById('inputData').value.trim();
-      if (!raw) return alert('Please paste input data.');
-
-      const blocks = raw.split(/\n\s*\n/);
-      const outLines = [];
-
-      blocks.forEach(block => {
-        const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
-        const header = lines[0];
-        const docLine = lines.find(l => /passport|nationalid|iqamaid/i.test(l));
-        const expiryLine = lines.find(l => /expiry date/i.test(l));
-        const nationalityLine = lines.find(l => /nationality/i.test(l));
-        const dobLine = lines.find(l => /date of birth/i.test(l));
-
-        if (!header || !docLine || !expiryLine || !nationalityLine || !dobLine) return;
-
-        const type = header.split(' - ')[0].trim();
-
-        const docType = /passport/i.test(docLine) ? 'P' :
-                        /nationalid/i.test(docLine) ? 'I' :
-                        /iqamaid/i.test(docLine) ? 'A' : 'P';
-
-        const docNumber = docLine.split(':')[1].trim();
-        const nationality = nationalityLine.split(':')[1].trim();
-        const expiry = formatDate(expiryLine.split(':')[1].trim());
-        const dob = formatDate(dobLine.split(':')[1].trim());
-
-        let genderCode = /Mrs|Ms|Miss/i.test(header) ? 'F' : 'M';
-        if (type === 'INF') {
-          genderCode += 'I';
-        } else if (type === 'CH') {
-          const dobRaw = dobLine.split(':')[1].trim().replace(/(\d{2})\/(\d{2})\/(\d{2,4})/, '$2/$1/$3');
-          const dobDate = new Date(dobRaw);
-          const today = new Date();
-          const months = (today.getFullYear() - dobDate.getFullYear()) * 12 + (today.getMonth() - dobDate.getMonth());
-          if (months < 24) genderCode += 'I';
-        }
-
-        const line = `SR DOCS YY HK1-${docType}-${nationality}-${docNumber}-${nationality}-${dob}-${genderCode}-${expiry}- /P`;
-        outLines.push(line);
-      });
-
-      document.getElementById('outputData').value = outLines.join('\n');
-    }
-
+    // JS Logic for the Amadeus format
     function formatDate(s) {
+      if(!s || !s.includes('/')) return s;
       const [d, m, y] = s.split('/');
       const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
       const mm = months[parseInt(m, 10) - 1];
@@ -228,21 +378,130 @@
       return d.padStart(2, '0') + mm + yy;
     }
 
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.innerHTML = isError 
+        ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> ${message}`
+        : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> ${message}`;
+      
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function loadSample() {
+      const sample = `ADT - Mrs Sarah Connor
+Passport: A9876543
+Nationality: GBR
+Date of birth: 12/04/1988
+Expiry Date: 30/09/2032
+
+INF - Mr John Connor
+Passport: B1234567
+Nationality: GBR
+Date of birth: 05/10/2023
+Expiry Date: 05/10/2028`;
+      
+      document.getElementById('inputData').value = sample;
+      document.getElementById('outputData').value = '';
+    }
+
+    function clearInput() {
+      document.getElementById('inputData').value = '';
+      document.getElementById('outputData').value = '';
+    }
+
+    function convertFormat() {
+      const raw = document.getElementById("inputData").value.trim();
+      if (!raw) {
+        showToast('Please paste input data first!', true);
+        return;
+      }
+
+      const blocks = raw.split(/\n\s*\n/);
+      const outLines = [];
+      let successCount = 0;
+
+      blocks.forEach(block => {
+        const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+        const header = lines[0];
+        const docLine = lines.find(l => /passport|national\s*id|iqama\s*id/i.test(l));
+        const expiryLine = lines.find(l => /expiry date/i.test(l));
+        const nationalityLine = lines.find(l => /nationality/i.test(l));
+        const dobLine = lines.find(l => /date of birth/i.test(l));
+
+        if (!header || !docLine || !expiryLine || !nationalityLine || !dobLine) return;
+
+        try {
+          const type = header.split('-')[0].trim();
+
+          const docType = /passport/i.test(docLine) ? 'P' :
+                          /national/i.test(docLine) ? 'I' :
+                          /iqama/i.test(docLine) ? 'A' : 'P';
+
+          const docNumber = docLine.split(':')[1].trim();
+          const nationality = nationalityLine.split(':')[1].trim();
+          
+          const expiryRaw = expiryLine.split(':')[1].trim();
+          const dobRawStr = dobLine.split(':')[1].trim();
+          
+          const expiry = formatDate(expiryRaw);
+          const dob = formatDate(dobRawStr);
+
+          let genderCode = /Mrs|Ms|Miss/i.test(header) ? 'F' : 'M';
+          
+          if (type === 'INF' || header.includes('INF')) {
+            genderCode += 'I';
+          } else if (type === 'CH') {
+            const dobReformatted = dobRawStr.replace(/(\d{2})\/(\d{2})\/(\d{2,4})/, '$2/$1/$3');
+            const dobDate = new Date(dobReformatted);
+            const today = new Date();
+            const months = (today.getFullYear() - dobDate.getFullYear()) * 12 + (today.getMonth() - dobDate.getMonth());
+            if (months < 24) genderCode += 'I';
+          }
+
+          // Amadeus Output Layout Generation
+          const line = `SR DOCS YY HK1-${docType}-${nationality}-${docNumber}-${nationality}-${dob}-${genderCode}-${expiry}- /P`;
+          outLines.push(line);
+          successCount++;
+          
+        } catch (e) {
+          console.error("Error parsing block:", block, e);
+        }
+      });
+
+      if (outLines.length === 0) {
+        showToast('Could not find matching patterns. Check your data format.', true);
+      } else {
+        document.getElementById("outputData").value = outLines.join('\n');
+        showToast(`Successfully converted ${successCount} passenger(s)!`);
+      }
+    }
+
     async function copyToClipboard() {
       const txt = document.getElementById('outputData').value;
-      if (!txt) return;
+      if (!txt) {
+        showToast('Nothing to copy!', true);
+        return;
+      }
       
       const copyButton = document.getElementById('copyButton');
+      const originalHtml = copyButton.innerHTML;
+
       try {
         await navigator.clipboard.writeText(txt);
-        copyButton.textContent = 'COPIED!';
+        copyButton.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> COPIED!`;
         copyButton.classList.add('success');
+        
+        showToast('Copied to clipboard!');
+
         setTimeout(() => {
-          copyButton.textContent = 'COPY TO CLIPBOARD';
+          copyButton.innerHTML = originalHtml;
           copyButton.classList.remove('success');
         }, 2000);
       } catch (err) {
-        console.error('Failed to copy: ', err);
+        showToast('Failed to copy. Please copy manually.', true);
       }
     }
   </script>
