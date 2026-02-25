@@ -195,7 +195,7 @@
 
         const docType = /passport/i.test(docLine) ? 'P' :
                         /nationalid/i.test(docLine) ? 'I' :
-                        /iqamaid/i.test(docLine) ? 'IQ' : 'P';
+                        /iqamaid/i.test(docLine) ? 'A' : 'P';
 
         const docNumber = docLine.split(':')[1].trim();
         const nationality = nationalityLine.split(':')[1].trim();
